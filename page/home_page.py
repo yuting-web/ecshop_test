@@ -7,19 +7,29 @@ from page.base_page import BasePage
 from selenium.webdriver.common.by import By
 from time import sleep
 
+"""主页面"""
 class HomePage(BasePage):
 
-    order_locator = (By.XPATH,'//*[@id="menu-ul"]/li[3]')
+    order_manage_locator = (By.XPATH,'//*[@id="menu-ul"]/li[3]')
     orderlist_locator = (By.XPATH, '//*[@id="menu-ul"]/li[3]/ul/li[1]/a')
+    order_qurey_locator = (By.XPATH, '//*[@id="menu-ul"]/li[3]/ul/li[2]/a')
 
-    #进入订单界面
+    #点击订单管理
     def into_order(self):
-        self.switch_main_frame()
+        self.switch_menu_frame()
         sleep(1)
-        self.find_element(self.order_locator).click()
-        sleep(1)
-        self.find_element(self.orderlist_locator).click()
-        sleep(3)
+        return  self.find_element(self.order_manage_locator).click()
+
+    #点击订单列表
+    def click_orderlist(self):
+        return self.find_element(self.orderlist_locator).click()
+
+    #点击订单查询
+    def click_order_query(self):
+        return self.find_element(self.order_qurey_locator).click()
+
+
+
 
 
 

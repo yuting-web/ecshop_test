@@ -41,7 +41,7 @@ class DeleteCase(BaseCase):
         sleep(1)
         #弹出框点击确认删除
         self.driver.switch_to.alert.accept()
-        sleep(6)
+        sleep(4)
         get_order_number1 = self.driver.find_element(By.XPATH,'//*[@id="order_0"]').text
         #断言
         self.assertNotEqual(get_order_number,get_order_number1)
@@ -71,7 +71,7 @@ class DeleteCase(BaseCase):
         sleep(1)
         #弹出框点击取消删除
         self.driver.switch_to.alert.dismiss()
-        sleep(6)
+        sleep(4)
         get_order_number1 = self.driver.find_element(By.XPATH,'//*[@id="order_0"]').text
         #断言
         self.assertEqual(get_order_number,get_order_number1)

@@ -19,6 +19,10 @@ class OrderListPage(BasePage):
     print_locator = (By.ID,'btnSubmit4')
     order_tbody_locator = (By.XPATH, '//*[@id="listDiv"]/table[1]/tbody')
 
+    #点击移除按钮
+    def click_delete(self):
+        self.find_element(self.delete_locator).click()
+
     #输入订单号
     def input_sn(self,sn):
         self.find_element(self.input_sn_locator).clear()
@@ -57,3 +61,12 @@ class OrderListPage(BasePage):
         get_consignee_name = td.find_element(By.TAG_NAME,'a').text
         return get_consignee_name
 
+    #点击查看订单
+    def lookover_order(self):
+        bp = BasePage(self.driver)
+        tbody = bp.find_element(self.order_tbody_locator)
+        tr = tbody.find_elements(By.TAG_NAME, 'tr')[2]
+        td = tr.find_elements(By.TAG_NAME,'td')[6]
+        td.find_elements(By.TAG_NAME,'a')[0].click()
+        print('---------')
+        return td.find_elements(By.TAG_NAME,'a')[0].click()

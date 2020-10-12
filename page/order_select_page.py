@@ -13,6 +13,7 @@ from time import sleep
 class OrderQueryPage(BasePage):
 
     tbody_locator = (By.XPATH,'/html/body/div[1]/form/table/tbody')
+    order_tbody_locator = (By.XPATH, '//*[@id="listDiv"]/table[1]/tbody')
 
     #输入收货人
     def input_consignee(self,consignee):
@@ -43,11 +44,25 @@ class OrderQueryPage(BasePage):
         select_country = td.find_elements(By.TAG_NAME,'select')[0]
         select_province = td.find_elements(By.TAG_NAME,'select')[1]
         select_city = td.find_elements(By.TAG_NAME,'select')[2]
+        select_area = td.find_elements(By.TAG_NAME,'select')[3]
         Select(select_country).select_by_index(1)
         sleep(1)
         Select(select_province).select_by_index(1)
         sleep(1)
         Select(select_city).select_by_index(1)
+        sleep(1)
+        Select(select_area).select_by_index(1)
+
+    #获取订单的收货人
+    def get_consignee(self):
+        bp = BasePage(self.driver)
+        tbody = bp.find_element(self.order_tbody_locator)
+        tr = tbody.find_elements(By.TAG_NAME, 'tr')[2]
+        td = tr.find_elements(By.TAG_NAME,'td')[2]
+        get_consignee_name = td.find_element(By.TAG_NAME,'a').text
+        return get_consignee_name
+
+
 
 
 
