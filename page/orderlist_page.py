@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from page.base_page import BasePage
 
 """订单列表页面"""
-class orderlist_page(BasePage):
+class OrderListPage(BasePage):
     input_sn_locator = (By.ID,'order_sn')
     input_consignee_locator = (By.ID,'consignee')
     select_status_locator = (By.ID,'status')
@@ -17,6 +17,7 @@ class orderlist_page(BasePage):
     order2_locator = (By.XPATH,'//*[@id="listDiv"]/table[1]/tbody/tr[4]/td[1]/input')
     delete_locator = (By.ID,'btnSubmit3')
     print_locator = (By.ID,'btnSubmit4')
+    order_tbody_locator = (By.XPATH, '//*[@id="listDiv"]/table[1]/tbody')
 
     #输入订单号
     def input_sn(self,sn):
@@ -42,4 +43,17 @@ class orderlist_page(BasePage):
     #打印订单
     def print_click(self):
         return self.find_element(self.print_locator).click()
+
+    #选择订单状态
+    def order_status(self):
+        return self.find_element(self.select_status_locator)
+
+    #获取订单的收货人
+    def get_consignee(self):
+        bp = BasePage(self.driver)
+        tbody = bp.find_element(self.order_tbody_locator)
+        tr = tbody.find_elements(By.TAG_NAME, 'tr')[2]
+        td = tr.find_elements(By.TAG_NAME,'td')[2]
+        get_consignee_name = td.find_element(By.TAG_NAME,'a').text
+        return get_consignee_name
 
