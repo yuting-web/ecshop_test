@@ -19,12 +19,14 @@ class BasePage():
         return self.driver.find_element(*locator)
 
     #切换到menu-frame
-    def switch_main_frame(self):
+    def switch_menu_frame(self):
         self.driver.switch_to.parent_frame()
         return self.driver.switch_to.frame("menu-frame")
 
     #切换到main-frame
-
+    def switch_main_frame(self):
+        self.driver.switch_to.parent_frame()
+        return self.driver.switch_to.frame('main-frame')
 
     #输入数据
     def send_keys(self,locator,text):
