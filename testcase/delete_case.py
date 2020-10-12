@@ -16,7 +16,7 @@ class DeleteCase(BaseCase):
 
     order_tbody_locator = (By.XPATH, '//*[@id="listDiv"]/table[1]/tbody')
 
-    #成功删除订单
+    #成功删除订单，用例编号：ECshop_ST_ddgl_006
     def test_delete_case(self):
         #进入订单页面
         hp = HomePage(self.driver)
@@ -46,7 +46,7 @@ class DeleteCase(BaseCase):
         #断言
         self.assertNotEqual(get_order_number,get_order_number1)
 
-    #取消删除订单
+    #取消删除订单，用例编号：ECshop_ST_ddgl_007
     def test_delete_cancel(self):
         #进入订单页面
         hp = HomePage(self.driver)
