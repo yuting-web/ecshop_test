@@ -9,7 +9,7 @@ from model.driver import browser_chrome
 from page.login_page import LoginPage
 from time import sleep
 from page.home_page import HomePage
-from page.base_page import BasePage
+from conf.config import LOGIN_URL
 
 """用例基类"""
 class BaseCase(unittest.TestCase):
@@ -29,18 +29,10 @@ class BaseCase(unittest.TestCase):
                 break
         self.driver.close()
         self.driver.switch_to.window(current_handle)
-        #登录
         lp = LoginPage(self.driver)
-        lp.open()
-        lp.input_username(self.username)
-        lp.input_password(self.password)
-        lp.login_button_click()
-        sleep(1)
-        cookies = self.driver.get_cookies()[0]
-        cookie = {}
-        for i,j in cookies.items():
-            if i == 'name' or i == 'value':
-                cookie[i] = j
+        cookie = lp.read_new_cookie()
+        lp.add_cookie(cookie)
+        self.driver.get(LOGIN_URL)
         hp = HomePage(self.driver)
         hp.into_order()
         sleep(1)
