@@ -8,7 +8,7 @@ from selenium import webdriver
 from page.home_page import HomePage
 from time import sleep
 from page.base_page import BasePage
-from page.order_select_page import OrderQueryPage
+from page.order_query_page import OrderQueryPage
 from selenium.webdriver.common.by import By
 
 driver = webdriver.Chrome()

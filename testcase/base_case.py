@@ -9,6 +9,7 @@ from model.driver import browser_chrome
 from page.login_page import LoginPage
 from time import sleep
 from page.home_page import HomePage
+from page.base_page import BasePage
 
 """用例基类"""
 class BaseCase(unittest.TestCase):
@@ -35,11 +36,30 @@ class BaseCase(unittest.TestCase):
         lp.input_password(self.password)
         lp.login_button_click()
         sleep(1)
+        cookies = self.driver.get_cookies()[0]
+        cookie = {}
+        for i,j in cookies.items():
+            if i == 'name' or i == 'value':
+                cookie[i] = j
         hp = HomePage(self.driver)
         hp.into_order()
         sleep(1)
+
+    def test_k(self):
+        pass
 
     #关闭浏览器
     def tearDown(self) -> None:
         self.driver.quit()
 
+    # #切换并进入到订单列表
+    # def into_orderlist(self):
+    #     #进入订单页面
+    #     hp = HomePage(self.driver)
+    #     sleep(1)
+    #     hp.click(hp.orderlist_locator)
+    #     sleep(1)
+    #     #切换到main-frame
+    #     bp = BasePage(self.driver)
+    #     bp.switch_main_frame()
+    #     sleep(1)

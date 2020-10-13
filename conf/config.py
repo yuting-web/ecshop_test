@@ -13,6 +13,8 @@ BASE_PATH = os.path.dirname(os.path.abspath(__file__)).split('conf')[0]
 CASE_PATH = os.path.join(BASE_PATH,"testcase")
 #报告的绝对路径
 REPORT_PATH = os.path.join(BASE_PATH,'report')
+#cookie
+COOKIE = {'name':'','value':''}
 
 
 

@@ -8,22 +8,20 @@ from page.home_page import HomePage
 from time import sleep
 from page.base_page import BasePage
 from page.orderlist_page import OrderListPage
-from selenium.webdriver.support.select import Select
-from page.order_select_page import OrderQueryPage
+from page.order_query_page import OrderQueryPage
 from selenium.webdriver.common.by import By
 import unittest
+from page.orderlist_page import OrderListPage
 
 """搜索订单"""
 class SearchOrder(BaseCase):
 
     consignee_name = "dtt"
     phonenumber = "15342601420"
-    tbody_locator = (By.XPATH, '/html/body/div[1]/form/table/tbody')
-    tbody1_locator = (By.CSS_SELECTOR,'#listDiv > table:nth-child(1) > tbody')
-    tr_locator = (By.TAG_NAME, 'tr')
-    td_locator = (By.TAG_NAME, 'td')
-    a_locator = (By.TAG_NAME, 'a')
-    tbody2_locator = (By.XPATH, '/html/body/form/div[1]/table/tbody')
+    adress_assert = '海德'
+    lookover_locator = (By.XPATH,'//*[@id="listDiv"]/table[1]/tbody/tr[3]/td[7]/a')
+    assert_adress_locator = (By.XPATH,'/html/body/form/div[1]/table/tbody/tr[18]/td[2]')
+    assert_adress = '东城区'
 
 
     #根据收货人搜索订单，用例编号（ECshop_ST_ddgl_003）
@@ -31,7 +29,7 @@ class SearchOrder(BaseCase):
         #进入到订单页面
         hp = HomePage(self.driver)
         sleep(1)
-        hp.click_orderlist()
+        hp.click(hp.orderlist_locator)
         sleep(1)
         # 切换到main-frame
         bp = BasePage(self.driver)
@@ -39,18 +37,16 @@ class SearchOrder(BaseCase):
         sleep(1)
         #输入收货人
         op = OrderListPage(self.driver)
-        op.input_consignee(self.consignee_name)
+        op.send_keys(op.input_consignee_locator,self.consignee_name)
         #订单状态选择最上面一项
-        locator = op.order_status()
-        sleep(1)
-        select = Select(locator)
+        select = op.select(op.select_status_locator)
         select.select_by_value('-1')
         sleep(1)
         #点击搜索
-        op.search_click()
+        op.click(op.search_locator)
         sleep(1)
         #断言
-        get_consignee_name = op.get_consignee()
+        get_consignee_name = op.text(op.consignee_locator)
         self.assertEqual(self.consignee_name,get_consignee_name)
 
     #根据手机号码搜索订单，用例编号“ECshop_ST_ddgl_016”
@@ -58,7 +54,7 @@ class SearchOrder(BaseCase):
         # 进入到订单页面
         hp = HomePage(self.driver)
         sleep(1)
-        hp.click_order_query()
+        hp.click(hp.order_qurey_locator)
         sleep(1)
         # 切换到main-frame
         bp = BasePage(self.driver)
@@ -66,26 +62,20 @@ class SearchOrder(BaseCase):
         sleep(1)
         # 输入收手机号码
         oqp = OrderQueryPage(self.driver)
-        oqp.input_phonenumber(self.phonenumber)
+        hp.send_keys(oqp.input_phonenumber_locator,self.phonenumber)
         # 点击搜索
-        tbody = bp.find_element(self.tbody_locator)
-        tr2 = tbody.find_elements(By.TAG_NAME, 'tr')[9]
-        td2 = tr2.find_elements(By.TAG_NAME, 'td')[0]
-        input = td2.find_elements(By.TAG_NAME, 'input')[0]
-        input.click()
+        hp.click(oqp.click_search_locator)
         sleep(1)
         #断言
-        tbody1 = bp.find_element(self.tbody1_locator)
-        tr = tbody1.find_elements(*self.tr_locator)[2]
-        td = tr.find_elements(*self.td_locator)[2]
-        self.assertEqual(td.find_elements(*self.a_locator)[0].text,'15342601420')
+        op = OrderListPage(self.driver)
+        text = hp.text(op.phonenumber_locator)
+        self.assertIn(self.phonenumber,text)
 
     #通过地址查询订单，用例编号，ECshop_ST_ddgl_014
     def test_search_order_by_adress(self):
-        # 进入到订单页面
         hp = HomePage(self.driver)
         sleep(1)
-        hp.click_order_query()
+        hp.click(hp.order_qurey_locator)
         sleep(1)
         # 切换到main-frame
         bp = BasePage(self.driver)
@@ -93,77 +83,64 @@ class SearchOrder(BaseCase):
         sleep(1)
         # 输入地址
         oqp = OrderQueryPage(self.driver)
-        oqp.input_adress('海德')
+        hp.send_keys(oqp.input_adress_locator,self.adress_assert)
         # 点击搜索
-        tbody = bp.find_element(self.tbody_locator)
-        tr2 = tbody.find_elements(By.TAG_NAME, 'tr')[9]
-        td2 = tr2.find_elements(By.TAG_NAME, 'td')[0]
-        input = td2.find_elements(By.TAG_NAME, 'input')[0]
-        input.click()
+        hp.click(oqp.click_search_locator)
         sleep(1)
         #断言
-        tbody1 = bp.find_element(self.tbody1_locator)
-        tr = tbody1.find_elements(*self.tr_locator)[2]
-        td = tr.find_elements(*self.td_locator)[2]
-        x = td.text.strip().strip("dtt [TEL: 15342601420]").strip("\n")
-        self.assertEqual(x,'海德')
+        op = OrderListPage(self.driver)
+        text = hp.text(op.adress_locator)
+        self.assertIn(self.adress_assert,text)
 
     #根据收货人查询订单，用例编号：ECshop_ST_ddgl_012
-    def test_search_order_by_consignee2(self):
-        # 进入到订单页面
+    def test_search_order_by_consignee_query(self):
         hp = HomePage(self.driver)
         sleep(1)
-        hp.click_order_query()
+        hp.click(hp.order_qurey_locator)
         sleep(1)
         # 切换到main-frame
         bp = BasePage(self.driver)
         bp.switch_main_frame()
         sleep(1)
-        # 输入地址
+        # 输入收货人
         oqp = OrderQueryPage(self.driver)
-        oqp.input_consignee('dtt')
+        hp.send_keys(oqp.input_consignee_locator,self.consignee_name)
         # 点击搜索
-        tbody = bp.find_element(self.tbody_locator)
-        tr2 = tbody.find_elements(By.TAG_NAME, 'tr')[9]
-        td2 = tr2.find_elements(By.TAG_NAME, 'td')[0]
-        input = td2.find_elements(By.TAG_NAME, 'input')[0]
-        input.click()
+        hp.click(oqp.click_search_locator)
         sleep(1)
-        # 断言
-        get_consignee_name = oqp.get_consignee()
-        self.assertEqual(self.consignee_name,get_consignee_name)
+        #断言
+        op = OrderListPage(self.driver)
+        text = hp.text(op.consignee_locator)
+        self.assertIn(self.consignee_name,text)
 
     #根据所在地区查找订单
     def test_search_order_by_area(self):
-        # 进入到订单页面
         hp = HomePage(self.driver)
         sleep(1)
-        hp.click_order_query()
+        hp.click(hp.order_qurey_locator)
         sleep(1)
         # 切换到main-frame
         bp = BasePage(self.driver)
         bp.switch_main_frame()
         sleep(1)
-        # 输入地址
+        # 选择地区
         oqp = OrderQueryPage(self.driver)
-        oqp.select_address()
+        hp.select(oqp.coutry_select_locator).select_by_index(1)
+        sleep(1)
+        hp.select(oqp.province_select_locator).select_by_index(1)
+        sleep(1)
+        hp.select(oqp.city_select_locator).select_by_index(1)
+        sleep(1)
+        hp.select(oqp.district_select_locator).select_by_index(1)
+        sleep(1)
         # 点击搜索
-        tbody = bp.find_element(self.tbody_locator)
-        tr2 = tbody.find_elements(By.TAG_NAME, 'tr')[9]
-        td2 = tr2.find_elements(By.TAG_NAME, 'td')[0]
-        input = td2.find_elements(By.TAG_NAME, 'input')[0]
-        input.click()
+        hp.click(oqp.click_search_locator)
         sleep(1)
-        # 断言
-        # olp = OrderListPage(self.driver)
-        # olp.lookover_order()
-        self.driver.find_element(By.XPATH,'//*[@id="listDiv"]/table[1]/tbody/tr[3]/td[7]/a').click()
+        #断言
+        hp.click(self.lookover_locator)
         sleep(1)
-        tbody2 = bp.find_element(self.tbody2_locator)
-        tr = tbody2.find_elements(By.TAG_NAME,'tr')[17]
-        td = tr.find_elements(By.TAG_NAME,'td')[1]
-        get_area = td.text.strip("海德").strip().strip('[').strip(']').split(" ")[3]
-        self.assertEqual(get_area,'东城区')
+        text = hp.text(self.assert_adress_locator)
+        self.assertIn(self.assert_adress,text)
 
 
 if __name__ == '__main__':

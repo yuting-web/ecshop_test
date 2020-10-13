@@ -22,7 +22,7 @@ class printOrder(BaseCase):
         hp = HomePage(self.driver)
         sleep(1)
         hp.click(hp.orderlist_locator)
-        sleep(3)
+        sleep(1)
         #切换到main-frame
         bp = BasePage(self.driver)
         bp.switch_main_frame()
