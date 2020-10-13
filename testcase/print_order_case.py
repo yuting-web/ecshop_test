@@ -21,31 +21,23 @@ class printOrder(BaseCase):
         #进入订单页面
         hp = HomePage(self.driver)
         sleep(1)
-        hp.click_orderlist()
-        sleep(1)
+        hp.click(hp.orderlist_locator)
+        sleep(3)
         #切换到main-frame
         bp = BasePage(self.driver)
         bp.switch_main_frame()
         sleep(1)
         #选中订单
         op = OrderListPage(self.driver)
-        tbody = op.find_element(self.order_tbody_locator)
-        tr1 = tbody.find_elements(By.TAG_NAME, 'tr')[2]
-        td1 = tr1.find_elements(By.TAG_NAME, 'td')[0]
-        td1.find_element(By.TAG_NAME, 'input').click()
+        op.click(op.click_order_locator)
         sleep(1)
         #点击打印订单
-        op.print_click()
+        op.click(op.print_locator)
         sleep(1)
         #切换到新开窗口订单打印界面
-        handles = self.driver.window_handles
-        current_handle = self.driver.current_window_handle
-        for handle in handles:
-            if handle != current_handle:
-                self.driver.switch_to.window(handle)
-                break
+        bp.switch_window()
         #断言
         pp = PrintPage(self.driver)
-        get_word = pp.get_orderinformation_word()
-        self.assertEqual(self.assert_word,get_word)
+        text = bp.text(pp.printorder_word_locator)
+        self.assertEqual(self.assert_word,text)
 
