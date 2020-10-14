@@ -66,6 +66,9 @@ class BasePage():
         element = self.find_element(locator)
         return Select(element)
 
+    def open(self,url):
+        self.driver.get(url)
+
 
 
 

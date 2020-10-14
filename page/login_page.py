@@ -6,29 +6,42 @@
 from selenium.webdriver.common.by import By
 from page.base_page import BasePage
 from conf.config import LOGIN_URL
+from selenium.webdriver.remote.webelement import WebElement
 
 """登录页面"""
 class LoginPage(BasePage):
     username_locator = (By.NAME,'username')
     password_locator = (By.NAME,'password')
     login_button_locator = (By.XPATH,'/html/body/form/table/tbody/tr[2]/td/table/tbody/tr[5]/td[2]/input')
+    username = 'admin'
+    password = 'admin123456'
 
-    #打开页面
-    def open(self):
-        self.driver.get(LOGIN_URL)
-
-    #输入用户名
-    def input_username(self,username):
-        self.find_element(self.username_locator).clear()
-        self.find_element(self.username_locator).send_keys(username)
-
-    #输入密码
-    def input_password(self,password):
-        self.find_element(self.password_locator).clear()
-        self.find_element(self.password_locator).send_keys(password)
-
-    #点击登录按钮
-    def login_button_click(self):
-        self.find_element(self.login_button_locator).click()
+    # 登录获取cookie
+    def get_cookie(self):
+        bp = BasePage(self.driver)
+        lp = LoginPage(self.driver)
+        bp.open(LOGIN_URL)
+        self.send_keys(self.username_locator,self.username)
+        self.send_keys(self.password_locator,self.password)
+        self.click(self.login_button_locator)
+        data = self.driver.get_cookies()[0]
+        data = str(data)
+        f = open('./cookie', "w")
+        f.write(data)
+        f.close()
 
 
+    def read_new_cookie(self):
+        """读取cookie"""
+        with open(r'C:\Users\30037\PycharmProjects\test_ecshop\cookie', "r") as f:
+            a = f.readline()
+            cookie = eval(a)
+            return cookie
+
+    def add_cookie(self, cookie):
+        """浏览器添加cookie"""
+        self.driver.get("http://192.168.1.164")
+        self.driver.add_cookie(cookie)
+    #
+    #
+    #
