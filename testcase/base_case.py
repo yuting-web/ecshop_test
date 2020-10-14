@@ -45,9 +45,6 @@ class BaseCase(unittest.TestCase):
         hp.into_order()
         sleep(1)
 
-    def test_k(self):
-        pass
-
     #关闭浏览器
     def tearDown(self) -> None:
         self.driver.quit()
